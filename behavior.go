@@ -87,3 +87,54 @@ func (b *BehaviorWander) Update(actor *Actor) {
 
 	actor.direction = actor.direction.Add(b.direction.Mul(b.weight))
 }
+
+type BehaviorSeek struct {
+	weight float64
+	target *Actor
+}
+
+//todo add radius for seek
+func NewBehaviorSeek(weight float64, target *Actor) Behavior {
+	b := &BehaviorSeek{
+		weight: weight,
+		target: target,
+	}
+	return b
+}
+
+func (b *BehaviorSeek) GetWeight() float64 {
+	return b.weight
+}
+
+func (b *BehaviorSeek) Update(actor *Actor) {
+	targetDirection := b.target.position.Sub(actor.position).Normalize()
+	actor.direction = actor.direction.Add(targetDirection.Mul(b.weight))
+}
+
+type BehaviorAvoid struct {
+	weight float64
+	target *Actor
+	radius float64
+}
+
+func NewBehaviorAvoid(weight float64, target *Actor, radius float64) Behavior {
+	b := &BehaviorAvoid{
+		weight: weight,
+		target: target,
+		radius: radius,
+	}
+	return b
+}
+
+func (b *BehaviorAvoid) GetWeight() float64 {
+	return b.weight
+}
+
+func (b *BehaviorAvoid) Update(actor *Actor) {
+	targetDirection := actor.position.Sub(b.target.position)
+	if targetDirection.Len() > b.radius {
+		return
+	}
+	targetDirection = targetDirection.Normalize()
+	actor.direction = actor.direction.Add(targetDirection.Mul(b.weight))
+}

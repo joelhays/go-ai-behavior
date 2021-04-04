@@ -31,7 +31,7 @@ func init() {
 
 	for _, actorCfg := range config.Actors {
 		for i := 0; i < actorCfg.Count; i++ {
-			actor := NewActor(actorCfg.Image, actorCfg.Color, actorCfg.Width, actorCfg.Height)
+			actor := NewActor(actorCfg.Name, actorCfg.Image, actorCfg.Color, actorCfg.Width, actorCfg.Height)
 			actor.speed = actorCfg.Speed
 			actor.direction = GetRandomDirection()
 			actor.position = GetRandomPosition(config.Window.Width, config.Window.Height)
@@ -94,9 +94,10 @@ func init() {
 }
 
 func setActorBehavior() {
+	currentActor := 0
 	for _, actorCfg := range config.Actors {
-		for i := 0; i < actorCfg.Count; i++ {
-			game.actors[i].speed = actorCfg.Speed
+		for _i := 0; _i < actorCfg.Count; _i++ {
+			game.actors[currentActor].speed = actorCfg.Speed
 
 			var behaviors []Behavior
 			for _, behaviorCfg := range actorCfg.Behaviors {
@@ -118,9 +119,27 @@ func setActorBehavior() {
 					weight := data["weight"].(float64)
 					changeInterval := data["changeInterval"].(int)
 					behaviors = append(behaviors, NewBehaviorWander(weight, changeInterval))
+				case "BehaviorSeek":
+					weight := data["weight"].(float64)
+					targetName := data["target"].(string)
+					for _, actor := range game.actors {
+						if actor.name == targetName {
+							behaviors = append(behaviors, NewBehaviorSeek(weight, actor))
+						}
+					}
+				case "BehaviorAvoid":
+					weight := data["weight"].(float64)
+					radius := data["radius"].(float64)
+					targetName := data["target"].(string)
+					for _, actor := range game.actors {
+						if actor.name == targetName {
+							behaviors = append(behaviors, NewBehaviorAvoid(weight, actor, radius))
+						}
+					}
 				}
 			}
-			game.actors[i].behaviors = behaviors
+			game.actors[currentActor].behaviors = behaviors
+			currentActor++
 		}
 	}
 }

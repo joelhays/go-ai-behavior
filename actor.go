@@ -29,6 +29,7 @@ func GetRandomDirection() mgl64.Vec2 {
 }
 
 type Actor struct {
+	name      string
 	color     color.RGBA
 	image     *ebiten.Image
 	position  mgl64.Vec2
@@ -42,7 +43,7 @@ type Actor struct {
 	behaviors []Behavior
 }
 
-func NewActor(imageFile string, color color.RGBA, width int, height int) *Actor {
+func NewActor(name string, imageFile string, color color.RGBA, width int, height int) *Actor {
 	image, _, err := ebitenutil.NewImageFromFile(imageFile)
 	if err != nil {
 		log.Fatal(err)
@@ -50,6 +51,7 @@ func NewActor(imageFile string, color color.RGBA, width int, height int) *Actor 
 
 	imageWidth, imageHeight := image.Size()
 	actor := &Actor{
+		name:   name,
 		image:  image,
 		color:  color,
 		origin: mgl64.Vec2{float64(imageWidth) / 2, float64(imageHeight) / 2},

@@ -1,14 +1,14 @@
 actors:
-- name: whatever
+- name: leader
   count: 1
   image: arrow.png
   width: 40
   height: 40
   speed: 4
   color:
-    r: 255
-    g: 0
-    b: 0
+    r: 64
+    g: 255
+    b: 64
     a: 255
   behaviors:
   # - type: BehaviorConstant
@@ -24,6 +24,47 @@ actors:
     data:
       weight: 0.05
       changeInterval: 60   
+  - type: BehaviorAvoid
+    data:
+      weight: 0.2
+      radius: 80.0
+      target: "obstacle"
+- name: drone
+  count: 10
+  image: arrow.png
+  width: 30
+  height: 30
+  speed: 3
+  color:
+    r: 255
+    g: 255
+    b: 255
+    a: 255
+  behaviors:
+  - type: BehaviorWander
+    data:
+      weight: 0.03
+      changeInterval: 15   
+  - type: BehaviorSeek
+    data:
+      weight: 0.05
+      target: "leader"   
+  - type: BehaviorAvoid
+    data:
+      weight: 0.2
+      radius: 80.0
+      target: "obstacle"         
+- name: obstacle
+  count: 20
+  image: arrow.png
+  width: 40
+  height: 40
+  speed: 0
+  color:
+    r: 255
+    g: 200
+    b: 96
+    a: 255          
 window:
   height: 600
   title: AI Behaviors
