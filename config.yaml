@@ -2,8 +2,8 @@ actors:
 - name: leader
   count: 1
   image: arrow.png
-  width: 40
-  height: 40
+  width: 30
+  height: 30
   speed: 4
   color:
     r: 64
@@ -29,8 +29,13 @@ actors:
       weight: 0.2
       radius: 80.0
       target: "obstacle"
+  - type: BehaviorAvoid
+    data:
+      weight: 0.2
+      radius: 120.0
+      target: "enemy"        
 - name: drone
-  count: 10
+  count: 20
   image: arrow.png
   width: 30
   height: 30
@@ -53,18 +58,58 @@ actors:
     data:
       weight: 0.2
       radius: 80.0
-      target: "obstacle"         
-- name: obstacle
-  count: 20
+      target: "obstacle"
+  - type: BehaviorAvoid
+    data:
+      weight: 0.2
+      radius: 120.0
+      target: "enemy"  
+- name: enemy
+  count: 10
   image: arrow.png
-  width: 40
-  height: 40
-  speed: 0
+  width: 30
+  height: 30
+  speed: 2
   color:
     r: 255
-    g: 200
-    b: 96
-    a: 255          
+    g: 0
+    b: 0
+    a: 255
+  position: #TODO allow setting specific position or random
+  - 200.0
+  - 150.0
+  behaviors:
+  - type: BehaviorWander
+    data:
+      weight: 0.1
+      changeInterval: 30   
+  - type: BehaviorSeek
+    data:
+      weight: 0.1
+      target: "leader"
+  - type: BehaviorAvoid
+    data:
+      weight: 0.2
+      radius: 80.0
+      target: "obstacle"              
+- name: obstacle
+  count: 15
+  image: warning.png
+  width: 35
+  height: 35
+  speed: .2
+  color:
+    r: 255
+    g: 255
+    b: 0
+    a: 255      
+  # behaviors:
+  # - type: BehaviorConstant
+  #   data:
+  #     direction:
+  #     - 1.0
+  #     - 1.0
+  #     weight: 0.1            
 window:
   height: 600
   title: AI Behaviors
