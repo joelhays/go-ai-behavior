@@ -1,0 +1,28 @@
+window:
+  title: AI Behaviors
+  width: 800
+  height: 600
+actors:
+  - name: leader
+    count: 1
+    image: arrow.png
+    width: 40
+    height: 40
+    speed: 4
+    color: 
+      r: 0x40
+      g: 0xff
+      b: 0x40
+      a: 0xff
+  - name: enemy
+    count: 5
+    image: arrow.png
+    width: 30
+    height: 30
+    speed: 4
+    color: 
+      r: 0xff
+      g: 0x00
+      b: 0xff
+      a: 0xff
+    
