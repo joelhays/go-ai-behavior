@@ -11,25 +11,25 @@ actors:
     b: 64
     a: 255
   behaviors:
-  - type: BehaviorConstant
+  - type: constant
     data:
       direction:
       - 0.0
       - 1.0
       weight: 0.01
-  - type: BehaviorKeyboard
+  - type: keyboard
     data:
       weight: 0.5   
-  - type: BehaviorWander
+  - type: wander
     data:
       weight: 0.05
       changeInterval: 60   
-  - type: BehaviorAvoid
+  - type: avoid
     data:
       weight: 0.2
       radius: 80.0
       target: "obstacle"
-  - type: BehaviorAvoid
+  - type: avoid
     data:
       weight: 0.2
       radius: 120.0
@@ -46,20 +46,20 @@ actors:
     b: 255
     a: 255
   behaviors:
-  - type: BehaviorWander
+  - type: wander
     data:
       weight: 0.03
       changeInterval: 15   
-  - type: BehaviorSeek
+  - type: seek
     data:
       weight: 0.05
       target: "leader"   
-  - type: BehaviorAvoid
+  - type: avoid
     data:
       weight: 0.2
       radius: 80.0
       target: "obstacle"
-  - type: BehaviorAvoid
+  - type: avoid
     data:
       weight: 0.2
       radius: 120.0
@@ -79,15 +79,15 @@ actors:
   - 200.0
   - 150.0
   behaviors:
-  - type: BehaviorWander
+  - type: wander
     data:
       weight: 0.1
       changeInterval: 30   
-  - type: BehaviorSeek
+  - type: seek
     data:
       weight: 0.1
       target: "leader"
-  - type: BehaviorAvoid
+  - type: avoid
     data:
       weight: 0.2
       radius: 80.0

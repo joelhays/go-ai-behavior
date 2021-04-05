@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"github.com/fsnotify/fsnotify"
-	"github.com/go-gl/mathgl/mgl64"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/spf13/viper"
 )
@@ -22,7 +21,7 @@ func init() {
 
 	loadConfig()
 
-	fmt.Printf("%+v\n", config)
+	// fmt.Printf("%+v\n", config)
 
 	ebiten.SetWindowTitle(config.Window.Title)
 	ebiten.SetWindowSize(config.Window.Width, config.Window.Height)
@@ -41,56 +40,6 @@ func init() {
 	}
 
 	setActorBehavior()
-
-	// config.Actors = append(config.Actors,
-	// 	struct {
-	// 		Name      string
-	// 		Count     int
-	// 		Image     string
-	// 		Width     int
-	// 		Height    int
-	// 		Speed     float64
-	// 		Color     color.RGBA
-	// 		Behaviors []struct {
-	// 			Type string
-	// 			Data interface{}
-	// 		}
-	// 	}{
-	// 		Name:   "whatever",
-	// 		Count:  0,
-	// 		Image:  "arrow.png",
-	// 		Width:  1,
-	// 		Height: 1,
-	// 		Speed:  1,
-	// 		Color:  color.RGBA{1, 2, 3, 1},
-	// 		Behaviors: []struct {
-	// 			Type string
-	// 			Data interface{}
-	// 		}{
-	// 			{
-	// 				Type: "BehaviorConstant",
-	// 				Data: struct {
-	// 					Weight    float64
-	// 					Direction mgl64.Vec2
-	// 				}{
-	// 					Weight:    0.5,
-	// 					Direction: GetRandomDirection(),
-	// 				},
-	// 			},
-	// 			{
-	// 				Type: "BehaviorKeyboard",
-	// 				Data: struct {
-	// 					Weight float64
-	// 				}{
-	// 					Weight: 0.1,
-	// 				},
-	// 			},
-	// 		},
-	// 	})
-	// fmt.Printf("%+v\n", config)
-
-	// viper.Set("Actors", config.Actors)
-	// viper.WriteConfig()
 }
 
 func setActorBehavior() {
@@ -100,44 +49,13 @@ func setActorBehavior() {
 			game.actors[currentActor].speed = actorCfg.Speed
 
 			var behaviors []Behavior
-			for _, behaviorCfg := range actorCfg.Behaviors {
-				data := behaviorCfg.Data.(map[interface{}]interface{})
+			factory := BehaviorFactory{}
 
-				switch behaviorCfg.Type {
-				case "BehaviorConstant":
-					weight := data["weight"].(float64)
-					directionData := data["direction"].([]interface{})
-					direction := mgl64.Vec2{
-						directionData[0].(float64),
-						directionData[1].(float64),
-					}
-					behaviors = append(behaviors, NewBehaviorConstant(weight, direction))
-				case "BehaviorKeyboard":
-					weight := data["weight"].(float64)
-					behaviors = append(behaviors, NewBehaviorKeyboard(weight))
-				case "BehaviorWander":
-					weight := data["weight"].(float64)
-					changeInterval := data["changeInterval"].(int)
-					behaviors = append(behaviors, NewBehaviorWander(weight, changeInterval))
-				case "BehaviorSeek":
-					weight := data["weight"].(float64)
-					targetName := data["target"].(string)
-					for _, actor := range game.actors {
-						if actor.name == targetName {
-							behaviors = append(behaviors, NewBehaviorSeek(weight, actor))
-						}
-					}
-				case "BehaviorAvoid":
-					weight := data["weight"].(float64)
-					radius := data["radius"].(float64)
-					targetName := data["target"].(string)
-					for _, actor := range game.actors {
-						if actor.name == targetName {
-							behaviors = append(behaviors, NewBehaviorAvoid(weight, actor, radius))
-						}
-					}
-				}
+			for _, behaviorCfg := range actorCfg.Behaviors {
+				newBehaviors := factory.Create(behaviorCfg.Type, behaviorCfg.Data)
+				behaviors = append(behaviors, newBehaviors...)
 			}
+
 			game.actors[currentActor].behaviors = behaviors
 			currentActor++
 		}
@@ -178,3 +96,55 @@ func main() {
 		log.Fatal(err)
 	}
 }
+
+// func debugSaveConfig() {
+// 	config.Actors = append(config.Actors,
+// 		struct {
+// 			Name      string
+// 			Count     int
+// 			Image     string
+// 			Width     int
+// 			Height    int
+// 			Speed     float64
+// 			Color     color.RGBA
+// 			Behaviors []struct {
+// 				Type string
+// 				Data interface{}
+// 			}
+// 		}{
+// 			Name:   "whatever",
+// 			Count:  0,
+// 			Image:  "arrow.png",
+// 			Width:  1,
+// 			Height: 1,
+// 			Speed:  1,
+// 			Color:  color.RGBA{1, 2, 3, 1},
+// 			Behaviors: []struct {
+// 				Type string
+// 				Data interface{}
+// 			}{
+// 				{
+// 					Type: "BehaviorConstant",
+// 					Data: struct {
+// 						Weight    float64
+// 						Direction mgl64.Vec2
+// 					}{
+// 						Weight:    0.5,
+// 						Direction: GetRandomDirection(),
+// 					},
+// 				},
+// 				{
+// 					Type: "BehaviorKeyboard",
+// 					Data: struct {
+// 						Weight float64
+// 					}{
+// 						Weight: 0.1,
+// 					},
+// 				},
+// 			},
+// 		})
+// 	fmt.Printf("%+v\n", config)
+
+// 	viper.Set("Actors", config.Actors)
+// 	viper.WriteConfig()
+// }

@@ -10,41 +10,41 @@ type Behavior interface {
 	Update(actor *Actor)
 }
 
-type BehaviorConstant struct {
+type ConstantBehavior struct {
 	weight    float64
 	direction mgl64.Vec2
 }
 
-func NewBehaviorConstant(weight float64, direction mgl64.Vec2) Behavior {
-	return &BehaviorConstant{
+func NewConstantBehavior(weight float64, direction mgl64.Vec2) Behavior {
+	return &ConstantBehavior{
 		weight:    weight,
 		direction: direction.Normalize(),
 	}
 }
 
-func (b *BehaviorConstant) GetWeight() float64 {
+func (b *ConstantBehavior) GetWeight() float64 {
 	return b.weight
 }
 
-func (b *BehaviorConstant) Update(actor *Actor) {
+func (b *ConstantBehavior) Update(actor *Actor) {
 	actor.direction = actor.direction.Add(b.direction.Mul(b.weight))
 }
 
-type BehaviorKeyboard struct {
+type KeyboardBehavior struct {
 	weight float64
 }
 
-func NewBehaviorKeyboard(weight float64) Behavior {
-	return &BehaviorKeyboard{
+func NewKeyboardBehavior(weight float64) Behavior {
+	return &KeyboardBehavior{
 		weight: weight,
 	}
 }
 
-func (b *BehaviorKeyboard) GetWeight() float64 {
+func (b *KeyboardBehavior) GetWeight() float64 {
 	return b.weight
 }
 
-func (b *BehaviorKeyboard) Update(actor *Actor) {
+func (b *KeyboardBehavior) Update(actor *Actor) {
 	if ebiten.IsKeyPressed(ebiten.KeyS) {
 		actor.direction = actor.direction.Add(mgl64.Vec2{0, 1}.Mul(b.weight))
 	}
@@ -59,26 +59,26 @@ func (b *BehaviorKeyboard) Update(actor *Actor) {
 	}
 }
 
-type BehaviorWander struct {
+type WanderBehavior struct {
 	weight         float64
 	changeInterval int
 	tick           int
 	direction      mgl64.Vec2
 }
 
-func NewBehaviorWander(weight float64, changeInterval int) Behavior {
-	b := &BehaviorWander{
+func NewWanderBehavior(weight float64, changeInterval int) Behavior {
+	b := &WanderBehavior{
 		weight:         weight,
 		changeInterval: changeInterval,
 	}
 	return b
 }
 
-func (b *BehaviorWander) GetWeight() float64 {
+func (b *WanderBehavior) GetWeight() float64 {
 	return b.weight
 }
 
-func (b *BehaviorWander) Update(actor *Actor) {
+func (b *WanderBehavior) Update(actor *Actor) {
 	if b.tick == 0 {
 		b.direction = GetRandomDirection()
 	}
@@ -88,37 +88,37 @@ func (b *BehaviorWander) Update(actor *Actor) {
 	actor.direction = actor.direction.Add(b.direction.Mul(b.weight))
 }
 
-type BehaviorSeek struct {
+type SeekBehavior struct {
 	weight float64
 	target *Actor
 }
 
 //todo add radius for seek
-func NewBehaviorSeek(weight float64, target *Actor) Behavior {
-	b := &BehaviorSeek{
+func NewSeekBehavior(weight float64, target *Actor) Behavior {
+	b := &SeekBehavior{
 		weight: weight,
 		target: target,
 	}
 	return b
 }
 
-func (b *BehaviorSeek) GetWeight() float64 {
+func (b *SeekBehavior) GetWeight() float64 {
 	return b.weight
 }
 
-func (b *BehaviorSeek) Update(actor *Actor) {
+func (b *SeekBehavior) Update(actor *Actor) {
 	targetDirection := b.target.position.Sub(actor.position).Normalize()
 	actor.direction = actor.direction.Add(targetDirection.Mul(b.weight))
 }
 
-type BehaviorAvoid struct {
+type AvoidBehavior struct {
 	weight float64
 	target *Actor
 	radius float64
 }
 
-func NewBehaviorAvoid(weight float64, target *Actor, radius float64) Behavior {
-	b := &BehaviorAvoid{
+func NewAvoidBehavior(weight float64, target *Actor, radius float64) Behavior {
+	b := &AvoidBehavior{
 		weight: weight,
 		target: target,
 		radius: radius,
@@ -126,11 +126,11 @@ func NewBehaviorAvoid(weight float64, target *Actor, radius float64) Behavior {
 	return b
 }
 
-func (b *BehaviorAvoid) GetWeight() float64 {
+func (b *AvoidBehavior) GetWeight() float64 {
 	return b.weight
 }
 
-func (b *BehaviorAvoid) Update(actor *Actor) {
+func (b *AvoidBehavior) Update(actor *Actor) {
 	targetDirection := actor.position.Sub(b.target.position)
 	if targetDirection.Len() > b.radius {
 		return
