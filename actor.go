@@ -4,13 +4,11 @@ import (
 	_ "image/png"
 
 	"image/color"
-	"log"
 	"math"
 	"math/rand"
 
 	"github.com/go-gl/mathgl/mgl64"
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 )
 
 func GetRandomPosition(rangeX, rangeY int) mgl64.Vec2 {
@@ -43,12 +41,7 @@ type Actor struct {
 	behaviors []Behavior
 }
 
-func NewActor(name string, imageFile string, color color.RGBA, width int, height int) *Actor {
-	image, _, err := ebitenutil.NewImageFromFile(imageFile)
-	if err != nil {
-		log.Fatal(err)
-	}
-
+func NewActor(name string, image *ebiten.Image, color color.RGBA, width int, height int) *Actor {
 	imageWidth, imageHeight := image.Size()
 	actor := &Actor{
 		name:   name,
@@ -93,11 +86,9 @@ func (actor *Actor) Draw(screen *ebiten.Image) {
 
 	op.GeoM.Translate(actor.position.X(), actor.position.Y())
 
-	// op.ColorM.Apply(actor.color)
-
-	diffR := float64(0xff - actor.color.R)
-	diffG := float64(0xff - actor.color.G)
-	diffB := float64(0xff - actor.color.B)
+	diffR := float64(255.0-actor.color.R) / 255.0
+	diffG := float64(255.0-actor.color.G) / 255.0
+	diffB := float64(255.0-actor.color.B) / 255.0
 
 	op.ColorM.Translate(-diffR, -diffG, -diffB, 0)
 

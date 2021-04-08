@@ -8,6 +8,7 @@ import (
 
 	"github.com/fsnotify/fsnotify"
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/spf13/viper"
 )
 
@@ -29,8 +30,13 @@ func init() {
 	game = NewGame()
 
 	for _, actorCfg := range config.Actors {
+		image, _, err := ebitenutil.NewImageFromFile(actorCfg.Image)
+		if err != nil {
+			log.Fatal(err)
+		}
+
 		for i := 0; i < actorCfg.Count; i++ {
-			actor := NewActor(actorCfg.Name, actorCfg.Image, actorCfg.Color, actorCfg.Width, actorCfg.Height)
+			actor := NewActor(actorCfg.Name, image, actorCfg.Color, actorCfg.Width, actorCfg.Height)
 			actor.speed = actorCfg.Speed
 			actor.direction = GetRandomDirection()
 			actor.position = GetRandomPosition(config.Window.Width, config.Window.Height)
