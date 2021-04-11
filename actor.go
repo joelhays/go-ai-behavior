@@ -67,6 +67,10 @@ func (actor *Actor) Update() {
 }
 
 func (actor *Actor) Draw(screen *ebiten.Image) {
+	if actor.image == nil {
+		return
+	}
+
 	rotation := math.Atan2(actor.direction.Y(), actor.direction.X())
 
 	op := &ebiten.DrawImageOptions{}

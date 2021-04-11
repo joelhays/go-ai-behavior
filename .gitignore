@@ -1,1 +1,4 @@
 go-ai-behavior
+images/*/**
+images/*.txt
+.DS_Store

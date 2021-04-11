@@ -2,13 +2,13 @@ actors:
 - name: leader
   count: 1
   image: arrow.png
-  width: 30
-  height: 30
-  speed: 4
+  width: 60
+  height: 60
+  speed: 2
   color:
-    r: 64
+    r: 150
     g: 255
-    b: 64
+    b: 255
     a: 255
   behaviors:
   - type: constant
@@ -23,27 +23,27 @@ actors:
   - type: wander
     data:
       weight: 0.05
-      changeInterval: 60   
+      changeInterval: 240   
   - type: avoid
     data:
       weight: 0.2
       radius: 80.0
-      target: "obstacle"
+      target: obstacle
   - type: avoid
     data:
       weight: 0.2
       radius: 120.0
-      target: "enemy"        
+      target: enemy        
 - name: drone
-  count: 20
+  count: 10
   image: arrow.png
-  width: 30
-  height: 30
-  speed: 3
+  width: 40
+  height: 40
+  speed: 1.2
   color:
     r: 255
     g: 255
-    b: 255
+    b: 150
     a: 255
   behaviors:
   - type: wander
@@ -53,27 +53,27 @@ actors:
   - type: seek
     data:
       weight: 0.05
-      target: "leader"   
+      target: leader  
   - type: avoid
     data:
       weight: 0.2
-      radius: 80.0
-      target: "obstacle"
+      radius: 90.0
+      target: obstacle
   - type: avoid
     data:
       weight: 0.2
       radius: 120.0
-      target: "enemy"  
+      target: enemy  
 - name: enemy
-  count: 10
+  count: 3
   image: arrow.png
-  width: 30
-  height: 30
-  speed: 2
+  width: 40
+  height: 40
+  speed: 1
   color:
     r: 255
-    g: 0
-    b: 0
+    g: 150
+    b: 150
     a: 255
   position: #TODO allow setting specific position or random
   - 200.0
@@ -86,24 +86,32 @@ actors:
   - type: seek
     data:
       weight: 0.1
-      target: "leader"
+      target: leader
   - type: avoid
     data:
       weight: 0.2
       radius: 80.0
-      target: "obstacle"              
+      target: obstacle            
 - name: obstacle
-  count: 15
+  count: 5
   image: warning.png
-  width: 35
+  width: 40
   height: 35
   speed: 0
   color:
-    r: 255
-    g: 255
+    r: 205
+    g: 205
     b: 0
     a: 255            
 window:
   height: 600
   title: AI Behaviors
   width: 800
+  background:
+    image: 
+    color: 
+      r: 155
+      g: 155
+      b: 155
+      a: 255
+      

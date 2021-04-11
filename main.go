@@ -13,6 +13,7 @@ import (
 )
 
 var (
+	state  *State
 	game   *Game
 	config appConfig
 )
@@ -22,37 +23,72 @@ func init() {
 
 	loadConfig()
 
-	// fmt.Printf("%+v\n", config)
-
 	ebiten.SetWindowTitle(config.Window.Title)
 	ebiten.SetWindowSize(config.Window.Width, config.Window.Height)
 
-	game = NewGame()
+	configureState()
+
+	game = NewGame(state)
+}
+
+func loadImage(name string) *ebiten.Image {
+	if len(name) == 0 {
+		return nil
+	}
+
+	if img, ok := state.images[name]; ok {
+		return img
+	}
+
+	image, _, err := ebitenutil.NewImageFromFile("images/" + name)
+	if err != nil {
+		log.Printf("%v", err)
+		return nil
+	}
+	state.images[name] = image
+	return image
+}
+
+func configureState() {
+	if state == nil {
+		state = &State{}
+		state.images = make(map[string]*ebiten.Image)
+		state.actors = make(map[string][]*Actor)
+	}
+
+	state.backgroundImage = loadImage(config.Window.Background.Image)
+	state.backgroundColor = config.Window.Background.Color
 
 	for _, actorCfg := range config.Actors {
-		image, _, err := ebitenutil.NewImageFromFile(actorCfg.Image)
-		if err != nil {
-			log.Fatal(err)
+		if len(state.actors[actorCfg.Name]) > actorCfg.Count {
+			state.actors[actorCfg.Name] = state.actors[actorCfg.Name][:actorCfg.Count]
+		} else if len(state.actors[actorCfg.Name]) < actorCfg.Count {
+			numToAdd := actorCfg.Count - len(state.actors[actorCfg.Name])
+			for i := 0; i < numToAdd; i++ {
+				actor := &Actor{}
+				actor.direction = GetRandomDirection()
+				actor.position = GetRandomPosition(config.Window.Width, config.Window.Height)
+				state.actors[actorCfg.Name] = append(state.actors[actorCfg.Name], actor)
+			}
 		}
 
 		for i := 0; i < actorCfg.Count; i++ {
-			actor := NewActor(actorCfg.Name, image, actorCfg.Color, actorCfg.Width, actorCfg.Height)
-			actor.speed = actorCfg.Speed
-			actor.direction = GetRandomDirection()
-			actor.position = GetRandomPosition(config.Window.Width, config.Window.Height)
+			actor := state.actors[actorCfg.Name][i]
 
-			game.AddActor(actor)
+			actor.name = actorCfg.Name
+			actor.image = loadImage(actorCfg.Image)
+
+			actor.width = actorCfg.Width
+			actor.height = actorCfg.Height
+			actor.name = actorCfg.Name
+			actor.color = actorCfg.Color
+			actor.speed = actorCfg.Speed
 		}
 	}
 
-	setActorBehavior()
-}
-
-func setActorBehavior() {
-	currentActor := 0
 	for _, actorCfg := range config.Actors {
-		for _i := 0; _i < actorCfg.Count; _i++ {
-			game.actors[currentActor].speed = actorCfg.Speed
+		for i := 0; i < actorCfg.Count; i++ {
+			actor := state.actors[actorCfg.Name][i]
 
 			var behaviors []Behavior
 			factory := BehaviorFactory{}
@@ -62,8 +98,7 @@ func setActorBehavior() {
 				behaviors = append(behaviors, newBehaviors...)
 			}
 
-			game.actors[currentActor].behaviors = behaviors
-			currentActor++
+			actor.behaviors = behaviors
 		}
 	}
 }
@@ -76,7 +111,8 @@ func viperConfigChanged(e fsnotify.Event) {
 	}
 	config = newConfig
 
-	setActorBehavior()
+	configureState()
+
 }
 
 func loadConfig() {

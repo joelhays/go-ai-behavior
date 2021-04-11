@@ -30,18 +30,22 @@ func (f *BehaviorFactory) Create(behaviorType string, config interface{}) []Beha
 	case "seek":
 		weight := data["weight"].(float64)
 		targetName := data["target"].(string)
-		for _, actor := range game.actors {
-			if actor.name == targetName {
-				behaviors = append(behaviors, NewSeekBehavior(weight, actor))
+		for name, actorGroup := range state.actors {
+			if name == targetName {
+				for _, actor := range actorGroup {
+					behaviors = append(behaviors, NewSeekBehavior(weight, actor))
+				}
 			}
 		}
 	case "avoid":
 		weight := data["weight"].(float64)
 		radius := data["radius"].(float64)
 		targetName := data["target"].(string)
-		for _, actor := range game.actors {
-			if actor.name == targetName {
-				behaviors = append(behaviors, NewAvoidBehavior(weight, actor, radius))
+		for name, actorGroup := range state.actors {
+			if name == targetName {
+				for _, actor := range actorGroup {
+					behaviors = append(behaviors, NewAvoidBehavior(weight, actor, radius))
+				}
 			}
 		}
 	}

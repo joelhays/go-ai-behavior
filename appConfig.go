@@ -4,9 +4,13 @@ import "image/color"
 
 type appConfig struct {
 	Window struct {
-		Title  string
-		Width  int
-		Height int
+		Title      string
+		Width      int
+		Height     int
+		Background struct {
+			Image string
+			Color color.RGBA
+		}
 	}
 	Actors []struct {
 		Name      string
