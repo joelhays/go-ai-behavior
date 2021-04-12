@@ -52,12 +52,14 @@ func (g *Game) Update() error {
 
 func (g *Game) Draw(screen *ebiten.Image) {
 	screen.Fill(g.state.backgroundColor)
+	screenw, screenh := screen.Size()
+
+	background := ebiten.NewImage(screenw, screenh)
 
 	if g.state.backgroundImage != nil {
 		op := &ebiten.DrawImageOptions{}
 
 		w, h := g.state.backgroundImage.Size()
-		screenw, screenh := screen.Size()
 		widthScale := float64(screenw) / float64(w)
 		heightScale := float64(screenh) / float64(h)
 
@@ -69,14 +71,24 @@ func (g *Game) Draw(screen *ebiten.Image) {
 
 		op.GeoM.Scale(widthScale, heightScale)
 
-		screen.DrawImage(g.state.backgroundImage, op)
+		background.DrawImage(g.state.backgroundImage, op)
 	}
 
+	static := ebiten.NewImage(screenw, screenh)
+	dynamic := ebiten.NewImage(screenw, screenh)
 	for _, actorGroup := range g.state.actors {
 		for _, actor := range actorGroup {
-			actor.Draw(screen)
+			if actor.static {
+				actor.Draw(static)
+			} else {
+				actor.Draw(dynamic)
+			}
 		}
 	}
+
+	screen.DrawImage(background, &ebiten.DrawImageOptions{})
+	screen.DrawImage(static, &ebiten.DrawImageOptions{})
+	screen.DrawImage(dynamic, &ebiten.DrawImageOptions{})
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {

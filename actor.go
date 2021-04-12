@@ -39,6 +39,8 @@ type Actor struct {
 	height int
 
 	behaviors []Behavior
+
+	static bool
 }
 
 func NewActor(name string, image *ebiten.Image, color color.RGBA, width int, height int) *Actor {

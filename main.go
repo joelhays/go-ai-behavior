@@ -88,7 +88,9 @@ func configureState() {
 			actor.color = actorCfg.Color
 			actor.speed = actorCfg.Speed
 
+			actor.static = false
 			if actorCfg.Position.Type == "static" {
+				actor.static = true
 				directionData := actorCfg.Position.Data.([]interface{})
 				actor.position = mgl64.Vec2{
 					directionData[0].(float64),
