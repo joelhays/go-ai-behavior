@@ -1,6 +1,8 @@
 package main
 
-import "image/color"
+import (
+	"image/color"
+)
 
 type appConfig struct {
 	Window struct {
@@ -13,13 +15,17 @@ type appConfig struct {
 		}
 	}
 	Actors []struct {
-		Name      string
-		Count     int
-		Image     string
-		Width     int
-		Height    int
-		Speed     float64
-		Color     color.RGBA
+		Name     string
+		Count    int
+		Image    string
+		Width    int
+		Height   int
+		Speed    float64
+		Color    color.RGBA
+		Position struct {
+			Type string
+			Data interface{}
+		}
 		Behaviors []struct {
 			Type string
 			Data interface{}

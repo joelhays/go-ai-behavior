@@ -1,0 +1,152 @@
+actors:
+- name: leader
+  count: 1
+  image: spaceships/rocket.png
+  width: 60
+  height: 60
+  speed: 2
+  color:
+    r: 150
+    g: 255
+    b: 150
+    a: 255
+  behaviors:
+  - type: constant
+    data:
+      direction:
+      - 0.0
+      - 1.0
+      weight: 0.01
+  - type: keyboard
+    data:
+      weight: 0.5   
+  - type: wander
+    data:
+      weight: 0.05
+      changeInterval: 240   
+  - type: avoid
+    data:
+      weight: 0.3
+      radius: 380.0
+      target: planet 
+  - type: avoid
+    data:
+      weight: 0.2
+      radius: 120.0
+      target: enemy    
+  - type: avoid
+    data:
+      weight: 0.3
+      radius: 70.0
+      target: asteroid             
+- name: drone
+  count: 10
+  image: spaceships/rocket.png
+  width: 40
+  height: 40
+  speed: 1.2
+  color:
+    r: 255
+    g: 255
+    b: 255
+    a: 255
+  behaviors:
+  - type: wander
+    data:
+      weight: 0.03
+      changeInterval: 15   
+  - type: seek
+    data:
+      weight: 0.05
+      target: leader  
+  - type: avoid
+    data:
+      weight: 0.3
+      radius: 380.0
+      target: planet 
+  - type: avoid
+    data:
+      weight: 0.2
+      radius: 120.0
+      target: enemy  
+  - type: avoid
+    data:
+      weight: 0.3
+      radius: 70.0
+      target: asteroid         
+- name: enemy
+  count: 3
+  image: spaceships/enemy-ship.png
+  width: 45
+  height: 45
+  speed: 1
+  color:
+    r: 255
+    g: 150
+    b: 150
+    a: 255
+  behaviors:
+  - type: wander
+    data:
+      weight: 0.1
+      changeInterval: 30   
+  - type: seek
+    data:
+      weight: 0.1
+      target: leader
+  - type: avoid
+    data:
+      weight: 0.3
+      radius: 380.0
+      target: planet        
+  - type: avoid
+    data:
+      weight: 0.3
+      radius: 70.0
+      target: asteroid           
+- name: planet
+  count: 1
+  image: planets/planet3.png
+  width: 360
+  height: 360
+  speed: 0
+  color:
+    r: 255
+    g: 255
+    b: 255
+    a: 255
+  position:
+    type: static
+    data: 
+    - 100.0
+    - 150.0     
+- name: asteroid
+  count: 8
+  image: asteroids/Asteroid-A-09-011.png
+  width: 65
+  height: 65
+  speed: .2
+  color:
+    r: 255
+    g: 255
+    b: 255
+    a: 255
+  behaviors:
+  - type: constant
+    data:
+      direction:
+      - 1.0
+      - 1.0
+      weight: 0.01        
+window:
+  height: 600
+  title: AI Behaviors
+  width: 800
+  background:
+    image: backgrounds/spacefield.png
+    color: 
+      r: 255
+      g: 255
+      b: 255
+      a: 255
+      

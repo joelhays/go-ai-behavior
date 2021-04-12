@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/fsnotify/fsnotify"
+	"github.com/go-gl/mathgl/mgl64"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/spf13/viper"
@@ -66,8 +67,11 @@ func configureState() {
 			numToAdd := actorCfg.Count - len(state.actors[actorCfg.Name])
 			for i := 0; i < numToAdd; i++ {
 				actor := &Actor{}
+
+				if actorCfg.Position.Type != "static" {
+					actor.position = GetRandomPosition(config.Window.Width, config.Window.Height)
+				}
 				actor.direction = GetRandomDirection()
-				actor.position = GetRandomPosition(config.Window.Width, config.Window.Height)
 				state.actors[actorCfg.Name] = append(state.actors[actorCfg.Name], actor)
 			}
 		}
@@ -83,6 +87,14 @@ func configureState() {
 			actor.name = actorCfg.Name
 			actor.color = actorCfg.Color
 			actor.speed = actorCfg.Speed
+
+			if actorCfg.Position.Type == "static" {
+				directionData := actorCfg.Position.Data.([]interface{})
+				actor.position = mgl64.Vec2{
+					directionData[0].(float64),
+					directionData[1].(float64),
+				}
+			}
 		}
 	}
 
