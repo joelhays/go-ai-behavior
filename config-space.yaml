@@ -8,15 +8,9 @@ actors:
   color:
     r: 150
     g: 255
-    b: 150
+    b: 255
     a: 255
   behaviors:
-  - type: constant
-    data:
-      direction:
-      - 0.0
-      - 1.0
-      weight: 0.01
   - type: keyboard
     data:
       weight: 0.5   
@@ -26,13 +20,8 @@ actors:
       changeInterval: 240   
   - type: avoid
     data:
-      weight: 0.3
-      radius: 380.0
-      target: planet 
-  - type: avoid
-    data:
       weight: 0.2
-      radius: 120.0
+      radius: 70.0
       target: enemy    
   - type: avoid
     data:
@@ -67,7 +56,7 @@ actors:
   - type: avoid
     data:
       weight: 0.2
-      radius: 120.0
+      radius: 80.0
       target: enemy  
   - type: avoid
     data:
@@ -121,7 +110,7 @@ actors:
     - 100.0
     - 150.0     
 - name: asteroid
-  count: 8
+  count: 6
   image: asteroids/Asteroid-A-09-011.png
   width: 65
   height: 65
