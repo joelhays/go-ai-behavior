@@ -138,3 +138,24 @@ func (b *AvoidBehavior) Update(actor *Actor) {
 	targetDirection = targetDirection.Normalize()
 	actor.direction = actor.direction.Add(targetDirection.Mul(b.weight))
 }
+
+type RotateBehavior struct {
+	weight float64
+	speed  float64
+}
+
+func NewRotateBehavior(weight float64, speed float64) Behavior {
+	b := &RotateBehavior{
+		weight: weight,
+		speed:  speed,
+	}
+	return b
+}
+
+func (b *RotateBehavior) GetWeight() float64 {
+	return b.weight
+}
+
+func (b *RotateBehavior) Update(actor *Actor) {
+	actor.rotation += b.speed * 1.0 / 60.0
+}

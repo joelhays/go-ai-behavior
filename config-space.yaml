@@ -114,7 +114,7 @@ actors:
   image: asteroids/Asteroid-A-09-011.png
   width: 65
   height: 65
-  speed: .2
+  speed: .3
   color:
     r: 255
     g: 255
@@ -126,7 +126,12 @@ actors:
       direction:
       - 1.0
       - 1.0
-      weight: 0.01        
+      weight: 0.01 
+  behaviors:
+  - type: rotate
+    data:
+      weight: 0.1
+      speed: 20.0                
 window:
   height: 600
   title: AI Behaviors

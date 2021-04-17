@@ -48,6 +48,10 @@ func (f *BehaviorFactory) Create(behaviorType string, config interface{}) []Beha
 				}
 			}
 		}
+	case "rotate":
+		weight := data["weight"].(float64)
+		speed := data["speed"].(float64)
+		behaviors = append(behaviors, NewRotateBehavior(weight, speed))
 	}
 
 	return behaviors

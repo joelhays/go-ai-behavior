@@ -35,6 +35,8 @@ type Actor struct {
 	speed     float64
 	origin    mgl64.Vec2
 
+	rotation float64
+
 	width  int
 	height int
 
@@ -73,7 +75,7 @@ func (actor *Actor) Draw(screen *ebiten.Image) {
 		return
 	}
 
-	rotation := math.Atan2(actor.direction.Y(), actor.direction.X())
+	rotation := math.Atan2(actor.direction.Y(), actor.direction.X()) + mgl64.DegToRad(actor.rotation)
 
 	op := &ebiten.DrawImageOptions{}
 	w, h := actor.image.Size()

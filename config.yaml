@@ -144,6 +144,11 @@ actors:
     data:
     - 200.0
     - 100.0      
+  behaviors:
+  - type: rotate
+    data:
+      weight: 0.1
+      speed: 90.0    
 - name: obstacle2
   count: 1
   image: warning.png
@@ -159,7 +164,12 @@ actors:
     type: static
     data:
     - 600.0
-    - 100.0     
+    - 100.0
+  behaviors:
+  - type: rotate
+    data:
+      weight: 0.1
+      speed: -90.0         
 - name: obstacle3
   count: 1
   image: warning.png
@@ -175,7 +185,12 @@ actors:
     type: static
     data:
     - 200.0
-    - 400.0      
+    - 400.0    
+  behaviors:
+  - type: rotate
+    data:
+      weight: 0.1
+      speed: 90.0      
 - name: obstacle4
   count: 1
   image: warning.png
@@ -191,7 +206,12 @@ actors:
     type: static
     data:
     - 600.0
-    - 400.0              
+    - 400.0     
+  behaviors:
+  - type: rotate
+    data:
+      weight: 0.1
+      speed: -90.0
 window:
   height: 600
   title: AI Behaviors
