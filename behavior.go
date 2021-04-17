@@ -6,7 +6,6 @@ import (
 )
 
 type Behavior interface {
-	GetWeight() float64
 	Update(actor *Actor)
 }
 
@@ -22,10 +21,6 @@ func NewConstantBehavior(weight float64, direction mgl64.Vec2) Behavior {
 	}
 }
 
-func (b *ConstantBehavior) GetWeight() float64 {
-	return b.weight
-}
-
 func (b *ConstantBehavior) Update(actor *Actor) {
 	actor.direction = actor.direction.Add(b.direction.Mul(b.weight))
 }
@@ -38,10 +33,6 @@ func NewKeyboardBehavior(weight float64) Behavior {
 	return &KeyboardBehavior{
 		weight: weight,
 	}
-}
-
-func (b *KeyboardBehavior) GetWeight() float64 {
-	return b.weight
 }
 
 func (b *KeyboardBehavior) Update(actor *Actor) {
@@ -74,10 +65,6 @@ func NewWanderBehavior(weight float64, changeInterval int) Behavior {
 	return b
 }
 
-func (b *WanderBehavior) GetWeight() float64 {
-	return b.weight
-}
-
 func (b *WanderBehavior) Update(actor *Actor) {
 	if b.tick == 0 {
 		b.direction = GetRandomDirection()
@@ -102,10 +89,6 @@ func NewSeekBehavior(weight float64, target *Actor) Behavior {
 	return b
 }
 
-func (b *SeekBehavior) GetWeight() float64 {
-	return b.weight
-}
-
 func (b *SeekBehavior) Update(actor *Actor) {
 	targetDirection := b.target.position.Sub(actor.position).Normalize()
 	actor.direction = actor.direction.Add(targetDirection.Mul(b.weight))
@@ -124,10 +107,6 @@ func NewAvoidBehavior(weight float64, target *Actor, radius float64) Behavior {
 		radius: radius,
 	}
 	return b
-}
-
-func (b *AvoidBehavior) GetWeight() float64 {
-	return b.weight
 }
 
 func (b *AvoidBehavior) Update(actor *Actor) {
@@ -150,10 +129,6 @@ func NewRotateBehavior(weight float64, speed float64) Behavior {
 		speed:  speed,
 	}
 	return b
-}
-
-func (b *RotateBehavior) GetWeight() float64 {
-	return b.weight
 }
 
 func (b *RotateBehavior) Update(actor *Actor) {
