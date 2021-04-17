@@ -1,0 +1,52 @@
+actors:
+- name: leader
+  count: 1
+  image: arrow.png
+  width: 50
+  height: 50
+  speed: 2
+  color:
+    r: 150
+    g: 255
+    b: 150
+    a: 255
+  behaviors:
+  - type: keyboard
+    data:
+      weight: 0.1   
+  - type: wander
+    data:
+      weight: 0.05
+      changeInterval: 240         
+- name: drone
+  count: 20
+  image: arrow.png
+  width: 30
+  height: 30
+  speed: 1.2
+  color:
+    r: 255
+    g: 255
+    b: 150
+    a: 255
+  behaviors:
+  - type: wander
+    data:
+      weight: 0.03
+      changeInterval: 15   
+  - type: seek
+    data:
+      weight: 0.05
+      target: leader         
+window:
+  height: 600
+  title: AI Behaviors
+  width: 800
+  background:
+    image: 
+    color: 
+      r: 125
+      g: 125
+      b: 125
+      a: 255
+      
