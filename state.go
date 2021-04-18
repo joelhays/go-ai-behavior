@@ -7,6 +7,8 @@ import (
 )
 
 type State struct {
+	screenWidth     int
+	screenHeight    int
 	backgroundImage *ebiten.Image
 	backgroundColor color.RGBA
 	actors          map[string][]*Actor

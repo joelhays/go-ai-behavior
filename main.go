@@ -4,6 +4,9 @@ import (
 	"fmt"
 	"log"
 	"math/rand"
+	"os"
+	"runtime"
+	"runtime/pprof"
 	"time"
 
 	"github.com/fsnotify/fsnotify"
@@ -20,6 +23,15 @@ var (
 )
 
 func init() {
+
+	f, err := os.Create("./go-ai-behavior.prof")
+	if err != nil {
+		log.Fatal(err)
+	}
+	pprof.StartCPUProfile(f)
+
+	runtime.LockOSThread()
+
 	rand.Seed(time.Now().Unix())
 
 	loadConfig()
@@ -55,6 +67,8 @@ func configureState() {
 		state = &State{}
 		state.images = make(map[string]*ebiten.Image)
 		state.actors = make(map[string][]*Actor)
+		state.screenWidth = config.Window.Width
+		state.screenHeight = config.Window.Height
 	}
 
 	state.backgroundImage = loadImage(config.Window.Background.Image)
@@ -148,6 +162,9 @@ func loadConfig() {
 }
 
 func main() {
+	defer pprof.StopCPUProfile()
+	defer runtime.UnlockOSThread()
+
 	if err := ebiten.RunGame(game); err != nil {
 		log.Fatal(err)
 	}

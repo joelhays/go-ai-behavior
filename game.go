@@ -9,11 +9,21 @@ import (
 )
 
 type Game struct {
-	state *State
+	state      *State
+	background *ebiten.Image
+	static     *ebiten.Image
+	dynamic    *ebiten.Image
 }
 
 func NewGame(state *State) *Game {
 	game := &Game{state: state}
+
+	screenw, screenh := state.screenWidth, state.screenHeight
+
+	game.background = ebiten.NewImage(screenw, screenh)
+	game.static = ebiten.NewImage(screenw, screenh)
+	game.dynamic = ebiten.NewImage(screenw, screenh)
+
 	return game
 }
 
@@ -54,8 +64,6 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	screen.Fill(g.state.backgroundColor)
 	screenw, screenh := screen.Size()
 
-	background := ebiten.NewImage(screenw, screenh)
-
 	if g.state.backgroundImage != nil {
 		op := &ebiten.DrawImageOptions{}
 
@@ -71,24 +79,25 @@ func (g *Game) Draw(screen *ebiten.Image) {
 
 		op.GeoM.Scale(widthScale, heightScale)
 
-		background.DrawImage(g.state.backgroundImage, op)
+		game.background.DrawImage(g.state.backgroundImage, op)
 	}
 
-	static := ebiten.NewImage(screenw, screenh)
-	dynamic := ebiten.NewImage(screenw, screenh)
+	game.static.Clear()
+	game.dynamic.Clear()
+
 	for _, actorGroup := range g.state.actors {
 		for _, actor := range actorGroup {
 			if actor.static {
-				actor.Draw(static)
+				actor.Draw(game.static)
 			} else {
-				actor.Draw(dynamic)
+				actor.Draw(game.dynamic)
 			}
 		}
 	}
 
-	screen.DrawImage(background, &ebiten.DrawImageOptions{})
-	screen.DrawImage(static, &ebiten.DrawImageOptions{})
-	screen.DrawImage(dynamic, &ebiten.DrawImageOptions{})
+	screen.DrawImage(game.background, &ebiten.DrawImageOptions{})
+	screen.DrawImage(game.static, &ebiten.DrawImageOptions{})
+	screen.DrawImage(game.dynamic, &ebiten.DrawImageOptions{})
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {

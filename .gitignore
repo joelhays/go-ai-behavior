@@ -3,3 +3,4 @@ images/*/**
 images/*.txt
 .DS_Store
 localonly/
+*.prof
